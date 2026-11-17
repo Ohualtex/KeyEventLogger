@@ -13,20 +13,12 @@ internal sealed class MainForm : Form
         Dock = DockStyle.Fill,
         IntegralHeight = false,
         SelectionMode = SelectionMode.None,
-        DrawMode = DrawMode.OwnerDrawFixed,
         AccessibleName = "Keyboard events",
         BackColor = Color.White,
         ForeColor = Ink
     };
     private readonly Label status = new() { AutoSize = true, Anchor = AnchorStyles.Right };
     private readonly Label count = new() { AutoSize = true, Anchor = AnchorStyles.Right };
-    private readonly CheckBox indentOverlaps = new()
-    {
-        Text = "Indent overlapping presses",
-        AutoSize = true,
-        Checked = true,
-        Margin = new Padding(4, 8, 0, 0)
-    };
     private readonly Button startButton = CreateButton("Start", primary: true);
     private readonly Button stopButton = CreateButton("Stop");
     private readonly Button clearButton = CreateButton("Clear");
@@ -49,9 +41,6 @@ internal sealed class MainForm : Form
         ForeColor = Ink;
         KeyPreview = true;
         rows.Font = rowFont;
-        rows.ItemHeight = rowFont.Height + 2;
-        rows.DrawItem += DrawEventRow;
-        indentOverlaps.CheckedChanged += (_, _) => rows.Invalidate();
 
         startButton.Click += (_, _) => SetRecording(true);
         stopButton.Click += (_, _) => SetRecording(false);
@@ -86,23 +75,9 @@ internal sealed class MainForm : Form
             return;
         }
 
-        rows.Items.Add(new KeyEvent(DateTimeOffset.Now, key, heldKeys.Count > 1));
+        rows.Items.Add(new KeyEvent(DateTimeOffset.Now, key));
         rows.TopIndex = rows.Items.Count - 1;
         RefreshStatus();
-    }
-
-    private void DrawEventRow(object? sender, DrawItemEventArgs e)
-    {
-        if (e.Index < 0)
-        {
-            return;
-        }
-
-        var entry = (KeyEvent)rows.Items[e.Index];
-        e.DrawBackground();
-        TextRenderer.DrawText(e.Graphics, entry.FormatDisplay(indentOverlaps.Checked), rowFont,
-            e.Bounds, Ink, TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter);
-        e.DrawFocusRectangle();
     }
 
     private void SetRecording(bool value)
@@ -214,7 +189,6 @@ internal sealed class MainForm : Form
         layout.SetColumnSpan(actions, 2);
         layout.Controls.Add(rows, 0, 3);
         layout.SetColumnSpan(rows, 2);
-        layout.Controls.Add(indentOverlaps, 0, 4);
         layout.Controls.Add(count, 1, 4);
         count.Margin = new Padding(0, 10, 3, 0);
         return layout;

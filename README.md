@@ -23,8 +23,6 @@ dotnet run --project KeyEventLogger/KeyEventLogger.csproj
 2. Select **Stop** to stop recording. If you switch windows while recording, **Waiting for focus** appears and recording resumes when you return.
 3. Select **Clear** to empty the list or **Export TXT** to choose a local file. The exported log contains a header and tab-separated timestamps and key names.
 
-The **Indent overlapping presses** option adds one visual indent to a key pressed while another key is already held. It is enabled by default, applies to existing rows when toggled, and leaves the TXT format unchanged.
-
 ## Design and limitations
 
 `MainForm` handles the UI and receives keyboard events. `KeyEvent` represents a single event. `TextLogExporter` writes the entries to disk only when the user exports them.
@@ -39,4 +37,4 @@ The app observes only events delivered to its active form. Windows and control n
 
 **Recording example**
 
-![Key Event Logger showing 15 example key presses, including indented overlapping presses](docs/screenshots/recording.png)
+![Key Event Logger showing 15 example key presses](docs/screenshots/recording.png)

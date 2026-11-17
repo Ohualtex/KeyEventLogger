@@ -4,6 +4,8 @@ internal sealed class MainForm : Form
 {
     private static readonly Color Ink = Color.FromArgb(22, 34, 51);
     private static readonly Color Accent = Color.FromArgb(34, 84, 158);
+    private static readonly Color StopAccent = Color.FromArgb(180, 39, 55);
+    private static readonly Color ControlBorder = Color.FromArgb(190, 201, 215);
     private static readonly Color Surface = Color.FromArgb(242, 245, 249);
 
     private readonly ListBox rows = new()
@@ -131,7 +133,12 @@ internal sealed class MainForm : Form
         status.ForeColor = active ? Color.FromArgb(18, 103, 62) : Ink;
         count.Text = $"{rows.Items.Count} events";
         startButton.Enabled = !recording;
+        startButton.BackColor = recording ? Surface : Accent;
+        startButton.FlatAppearance.BorderColor = recording ? ControlBorder : Accent;
         stopButton.Enabled = recording;
+        stopButton.BackColor = recording ? StopAccent : Surface;
+        stopButton.ForeColor = recording ? Color.White : Ink;
+        stopButton.FlatAppearance.BorderColor = recording ? StopAccent : ControlBorder;
         clearButton.Enabled = rows.Items.Count > 0;
         exportButton.Enabled = clearButton.Enabled;
     }
@@ -225,7 +232,7 @@ internal sealed class MainForm : Form
             BackColor = primary ? Accent : Color.White,
             ForeColor = primary ? Color.White : Ink
         };
-        button.FlatAppearance.BorderColor = primary ? Accent : Color.FromArgb(190, 201, 215);
+        button.FlatAppearance.BorderColor = primary ? Accent : ControlBorder;
         return button;
     }
 

@@ -19,9 +19,9 @@ dotnet run --project KeyEventLogger/KeyEventLogger.csproj
 
 ## Use the logger
 
-1. Select **Start** and press a few keys in the application window. The list shows the local time, key name, and event type.
+1. Select **Start** and press a few keys in the application window. The list shows one row with the local time and key name for each press. Releasing a key or holding it down adds no extra rows.
 2. Select **Stop** to stop recording. If you switch windows while recording, **Waiting for focus** appears and recording resumes when you return.
-3. Select **Clear** to empty the list or **Export TXT** to choose a local file. The exported log contains a header and tab-separated timestamps, key names, and event types.
+3. Select **Clear** to empty the list or **Export TXT** to choose a local file. The exported log contains a header and tab-separated timestamps and key names.
 
 ## Design and limitations
 
@@ -37,4 +37,4 @@ The app observes only events delivered to its active form. Windows and control n
 
 **Recording example**
 
-![Key Event Logger showing eight example key press and release events](docs/screenshots/recording.png)
+![Key Event Logger showing 15 example key presses](docs/screenshots/recording.png)

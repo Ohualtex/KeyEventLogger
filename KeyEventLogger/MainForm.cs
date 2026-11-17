@@ -196,7 +196,7 @@ internal sealed class MainForm : Form
 
     private static Button CreateButton(string text, bool primary = false)
     {
-        var button = new Button
+        var button = new ActionButton
         {
             Text = text,
             Size = new Size(112, 36),
@@ -208,6 +208,22 @@ internal sealed class MainForm : Form
         };
         button.FlatAppearance.BorderColor = primary ? Accent : ControlBorder;
         return button;
+    }
+
+    private sealed class ActionButton : Button
+    {
+        protected override bool ShowFocusCues => false;
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            if (Focused && base.ShowFocusCues)
+            {
+                ControlPaint.DrawBorder(e.Graphics, ClientRectangle,
+                    Ink, 2, ButtonBorderStyle.Solid, Ink, 2, ButtonBorderStyle.Solid,
+                    Ink, 2, ButtonBorderStyle.Solid, Ink, 2, ButtonBorderStyle.Solid);
+            }
+        }
     }
 
     protected override void Dispose(bool disposing)

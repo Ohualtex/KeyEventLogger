@@ -24,6 +24,7 @@ internal sealed class MainForm : Form
     private readonly Font headingFont = new("Segoe UI", 21, FontStyle.Bold);
     private readonly Font rowFont = new(FontFamily.GenericMonospace, 11);
 
+    private readonly HashSet<Keys> heldKeys = [];
     private bool windowActive;
     private bool recording;
     private bool exporting;
@@ -56,23 +57,23 @@ internal sealed class MainForm : Form
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
-        Record(e.KeyCode, KeyEventKind.KeyDown);
+        RecordPress(e.KeyCode);
     }
 
     protected override void OnKeyUp(KeyEventArgs e)
     {
         base.OnKeyUp(e);
-        Record(e.KeyCode, KeyEventKind.KeyUp);
+        heldKeys.Remove(e.KeyCode);
     }
 
-    private void Record(Keys key, KeyEventKind kind)
+    private void RecordPress(Keys key)
     {
-        if (!recording || exporting || !windowActive || ActiveForm != this)
+        if (!recording || exporting || !windowActive || !heldKeys.Add(key))
         {
             return;
         }
 
-        rows.Items.Add(new KeyEvent(DateTimeOffset.Now, key, kind));
+        rows.Items.Add(new KeyEvent(DateTimeOffset.Now, key));
         rows.TopIndex = rows.Items.Count - 1;
         RefreshStatus();
     }
@@ -80,6 +81,7 @@ internal sealed class MainForm : Form
     private void SetRecording(bool value)
     {
         recording = value;
+        heldKeys.Clear();
         RefreshStatus();
         if (value)
         {
@@ -90,6 +92,10 @@ internal sealed class MainForm : Form
     private void SetWindowActive(bool value)
     {
         windowActive = value;
+        if (!value)
+        {
+            heldKeys.Clear();
+        }
         RefreshStatus();
     }
 
